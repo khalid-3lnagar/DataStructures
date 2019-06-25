@@ -1,7 +1,7 @@
 const val STRING_LINE = "\n\t************************************************\n"
 
 fun main() {
-    val linkedList = LinkedList()
+    val linkedList = LinkedList<Int>()
 
     with(linkedList) {
         //Add some data
@@ -30,7 +30,7 @@ fun main() {
 
 }
 
-fun printList(node: Node?) {
+fun <T> printList(node: Node<T>?) {
     if (node == null) {
         println()
         return
@@ -42,10 +42,10 @@ fun printList(node: Node?) {
     printList(node.next)
 }
 
-class LinkedList(
-    private var head: Node? = null,
-    private var tail: Node? = null,
-    private var current: Node? = null,
+class LinkedList<T>(
+    private var head: Node<T>? = null,
+    private var tail: Node<T>? = null,
+    private var current: Node<T>? = null,
     private var count: Int = 0
 ) {
 
@@ -53,7 +53,7 @@ class LinkedList(
         head?.also(::addLast)
     }
 
-    fun addFirst(newNode: Node) {
+    fun addFirst(newNode: Node<T>) {
         if (count == 0)
             tail = newNode
         else {
@@ -69,7 +69,7 @@ class LinkedList(
 
     fun getFirst() = head
 
-    fun addLast(newNode: Node) {
+    fun addLast(newNode: Node<T>) {
         if (count == 0)
             head = newNode
         else {
@@ -107,7 +107,7 @@ class LinkedList(
 
     }
 
-    private fun removeLastNode(node: Node) {
+    private fun removeLastNode(node: Node<T>) {
         if (node.next == tail) {
             node.next = null
             tail = node
@@ -115,7 +115,7 @@ class LinkedList(
         } else removeLastNode(node.next!!)
     }
 
-    fun removeByValue(value: Int) {
+    fun removeByValue(value: T) {
 
         if (contains(value)) {
 
@@ -131,7 +131,7 @@ class LinkedList(
         }
     }
 
-    private fun searchAndRemove(value: Int) {
+    private fun searchAndRemove(value: T) {
         current = head
         recursiveSearchByValue(value)?.remove()
         current = null
@@ -143,16 +143,16 @@ class LinkedList(
         count = 0
     }
 
-    fun contains(value: Int): Boolean = if (head?.value == value || tail?.value == value) true else search(value)
+    fun contains(value: T): Boolean = if (head?.value == value || tail?.value == value) true else search(value)
 
-    private fun search(value: Int): Boolean {
+    private fun search(value: T): Boolean {
         current = head?.next
         val isHere = recursiveSearchByValue(value) != null
         current = null
         return isHere
     }
 
-    private fun recursiveSearchByValue(value: Int): Node? {
+    private fun recursiveSearchByValue(value: T): Node<T>? {
         if (current == tail) return null
 
         return if (current?.value == value)
@@ -167,11 +167,13 @@ class LinkedList(
 
 }
 
-class Node(var value: Int?, var next: Node? = null, var previous: Node? = null)
-
-fun Node.remove() {
-    next?.previous = previous
-    previous?.next = next
+class Node<T>(var value: T?, var next: Node<T>? = null, var previous: Node<T>? = null) {
+    fun remove() {
+        next?.previous = previous
+        previous?.next = next
+    }
 }
+
+
 
 
